@@ -1,8 +1,21 @@
-source :rubygems
+source "https://rubygems.org"
 
-gemspec
+# uncomment for chipmunk
+# gem 'chipmunk'
+#gem 'require_all'
+#gem 'thor'
+#gem "gamebox" #, '~> 0.5.0'
+#gem "conject"
+#gem "releasy"
+#
+
+gem 'parallel'
+gem 'bindata'
 
 group :development do
-  gem 'kramdown'
-  gem 'cucumber', '~> 0.10.2'
+  gem 'ruby-progressbar'
+  gem 'pry'
+  gem "rspec"
+  gem "rspec-its"
+  gem "rake"
 end

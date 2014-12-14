@@ -1,31 +1,22 @@
-# abstracta
+# Abstracta
 
-* [Homepage](https://rubygems.org/gems/abstracta)
-* [Documentation](http://rubydoc.info/gems/abstracta/frames)
-* [Email](mailto:jweissman1986 at gmail.com)
+Cellular automata game :)
 
-## Description
+The idea is to have a game server where different players' organisms
+could interact...
 
-TODO: Description
 
-## Features
+# Dependencies
 
-## Examples
+You will need to
 
-    require 'abstracta'
+  brew install sdl2 libogg libvorbis
 
-## Requirements
+for Gosu's dependencies. Then bundle and rake to play.
 
-## Install
+Ideally we'll get vagrant setup to build a dev environment for us...
 
-    $ gem install abstracta
-
-## Synopsis
-
-    $ abstracta
-
-## Copyright
-
-Copyright (c) 2014 Joseph Weissman
-
-See {file:LICENSE.txt} for details.
+(Eventually we'll want to containerize the server application too, 
+although that can be headless... A containerized dev environment
+makes sense eventually too once that is reified a bit further. Something
+like boxen may not be the worst thing to think about eventually there too.)

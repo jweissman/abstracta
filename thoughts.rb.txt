@@ -1,0 +1,63 @@
+  # A discrete (ideally tuple-like) value at the 
+  # boundaries between adapters and reactors
+  #class AbstractAdapter
+  #  def initialize(rx)
+  #    @reactor = rx
+  #  end
+
+  #  def drive
+  #    @reactor.engine.turn
+  #  end
+
+  #  def handle(event)
+  #    @reactor.react(event)
+  #  end
+  #end
+
+  #class ConsoleAdapter
+  #  def handle(event)
+
+  #  end
+  #end
+
+  #class AbstractDisruptor
+  #  include Disruptor::Processor
+
+  #  def initialize(adapter)
+  #    @adapter = adapter
+
+  #  end
+
+  #  def absorb(events)
+  #    @adapter.handle(event)
+  #    process_event(event)
+  #  end
+
+  #  def process_event(event)
+  #    raise "implement in subclass"
+  #  end
+  #end
+
+  #class SimpleDisruptor < AbstractDisruptor
+
+  #end
+
+
+  #class SimpleActor < AbstractReactor
+  #  def perform(story) #name, *args, &blk)
+  #    process(story.events)
+  #    story.events.each do |event|
+  #      @engine.adapt do |event|
+  #        @disruptor.absorb(event)
+  #      end
+  #    end
+  #  end
+  #end
+
+  #class WebsocketReactor < SimpleReactor
+  #  def react(name, *args, &blk)
+  #    raise 'not implemented'
+  #  end
+  #end
+
+

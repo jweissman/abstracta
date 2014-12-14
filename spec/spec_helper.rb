@@ -1,4 +1,7 @@
 require 'rspec'
-require 'abstracta/version'
+require 'rspec/its'
 
-include Abstracta
+require 'pry'
+
+#require 'abstracta'
+#include Abstracta
