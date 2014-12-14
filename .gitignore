@@ -2,6 +2,7 @@ Gemfile.lock
 doc/
 pkg/
 vendor/
+coverage/
 tags
 .bundle/
 .rvmrc

@@ -13,6 +13,10 @@ describe World do
   let!(:territory) { subject.territories.first }
   let!(:occupant) { subject.occupants.first }
 
+  it 'should have an age' do
+    expect(subject.age).to be_zero
+  end
+
   it 'should generate a territory' do
     expect(territory).to be_a(Territory)
   end
@@ -59,6 +63,10 @@ describe World do
   end
 
   context "#step" do
+    it 'should age the world' do
+      expect { subject.step }.to change { subject.age }.by(1)
+    end
+
     it "should expand the territories" do
       expect { subject.step }.to change { territory.size }.by(1)
     end

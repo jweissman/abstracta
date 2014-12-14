@@ -1,29 +1,27 @@
-
 module Abstracta
   class Genome < BinData::Record
     bit1 :mobile
-    bit1 :sterile
     bit1 :sticky
     bit1 :armored
-    bit1 :acidic
-    bit1 :fiber
-    bit1 :channel
-    bit1 :worm
-
-    bit4 :growth_cycle
-    bit4 :growth_radius
-    bit4 :growth_limit
-
-    bit8 :influence_radius
-    bit8 :vision_radius
-
-
-    # packed structure of suborganisms...?
-    #
+    bit1 :sterile
+     
+    int8 :growth_cycle
+    int8 :growth_radius
+    int8 :growth_limit
+    int8 :influence_radius
+    int8 :vision_radius
 
     def self.default
-      #default_options = {:influence_radius => 30, :vision_radius => 100}
-      Genome.new( mobile: 1, sterile: 0, growth_cycle: 1, growth_radius: 2)
+      new(
+	growth_cycle: 1,
+	growth_limit: 10,
+	growth_radius: 1,
+	influence_radius: 10,
+	sterile: false, 
+	sticky: false,
+	vision_radius: 100,
+        mobile: true, 
+      )
     end
   end
 end

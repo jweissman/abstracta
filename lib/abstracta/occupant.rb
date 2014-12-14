@@ -17,14 +17,9 @@ module Abstracta
       @age = @age + 1
     end
 
-
     def self.generate(world=nil)
       return new unless world
       new(world.available.sample)
     end
-
-    #def adjacent(location)
-    #  raise 'not impl (should it really be here?)' 
-    #end
   end
 end

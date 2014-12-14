@@ -3,10 +3,17 @@ require 'abstracta'
 include Abstracta
 
 describe Territory do
-  subject { Territory.new(occupants) } #w(double(:available? => true)) }
+  let(:occupants) { [occupant] }
+  let(:occupant)  { Occupant.new }
+  subject { Territory.new(occupants) }
+
+  #its(:dna) { is_expected.to be_a(Genome) }
+
+  it 'should have dna' do
+    expect(subject.dna).to be_a Genome
+  end
+
   context "#step" do
-    let(:occupants) { [occupant] }
-    let(:occupant)  { Occupant.new } # OpenStruct.new(age: 0, x: 0, y: 0) } #subject.occupants.first }
 
     it "should age occupants" do
       expect { subject.step }.to change { occupant.age }.by 1

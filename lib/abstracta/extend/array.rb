@@ -1,5 +1,11 @@
 PARALLELISM = 1
+
 class Array
+  def x; first  end
+  def y; second end
+  def z; third  end
+  def t; fourth end
+
   def parallel_each(name="please wait...", &blk)
     if PARALLELISM == 1
       each(&blk)

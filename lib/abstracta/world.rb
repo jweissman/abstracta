@@ -1,6 +1,6 @@
 module Abstracta
   class World
-    attr_reader :field, :territories
+    attr_reader :age, :field, :territories
 
     def initialize(opts={})
       @age = 0
@@ -18,30 +18,15 @@ module Abstracta
 
     def create_territories(n=1)
       Array.new(n) { Territory.generate }
-      
-      #@field.to_a.sample(n).map do |x,y|
-      #  [x,y]
-      #  #Territory.new(self,[Occupant.new(x,y)])
-      #end
     end
 
     def update_territories
       @age = @age + 1
       @territories.each(&:step)
-      #@raw_territories.map! do |occupants| 
-      #
-      #  radius = @dna[@raw_territories.index(occupants)].growth_radius
-      #  targets = @occupants.map(&:location).map {|p| @compass.project(p)} #.adjacent_spaces(occupants, radius)
-      #  occupants + targets.sample
-      #end
     end
-
-    #def territories
-    #end
 
     def step
       update_territories
-      #territories.parallel_each(&:step)
     end
 
     def available?(position)

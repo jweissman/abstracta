@@ -5,21 +5,17 @@ module Abstracta
 
     attr_reader :age
     attr_reader :occupants
-    attr_reader :genome
+    attr_reader :dna
 
-    def_delegators :genome, :growth_cycle, :growth_radius
+    def_delegators :dna, :growth_cycle, :growth_radius, :mobile, :sterile, :growth_limit
 
     def initialize(occupants=[])
       raise "occupants is not an array?" unless occupants.is_a?(Array)
 
       @age = 0
       @occupants = occupants
-      @genome = Genome.default
+      @dna = Genome.default
       @compass = Compass.new
-    end
-
-    def dna
-      @genome.write
     end
 
     def to_s

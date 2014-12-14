@@ -1,0 +1,7 @@
+:directories: 
+- lib
+:excludes:
+- spec
+- config/initializers
+- vendor/bundle
+:threshold: 90 
