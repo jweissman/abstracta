@@ -24,12 +24,11 @@ module Abstracta
 
     def size; @occupants.size end
 
-
     def adjacent_spaces
-      @occupants.collect { |o| @compass.project([o.x, o.y]) } 
+      @occupants.collect { |o| @compass.project(o) }.flatten(1) #[o.x, o.y]) } 
     end
 
-    # stuff that requires a world... let's factor into a subclass once we're green?
+    # stuff that requires a world... let's factor this out somehow?
 
     def step(world=nil)
       @age = @age + 1
@@ -46,7 +45,7 @@ module Abstracta
 
     def grow(world=nil)
       target = grow_targets(world).sample
-      @occupants << Occupant.new(target[0], target[1]) # Occupant.new(*target) #grow_targets.sample)
+      @occupants << Occupant.new(target.x, target.y)
     end
 
     def self.generate(n=1,world=nil)

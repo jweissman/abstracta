@@ -4,4 +4,4 @@
 - spec
 - config/initializers
 - vendor/bundle
-:threshold: 90 
+:threshold: 95 

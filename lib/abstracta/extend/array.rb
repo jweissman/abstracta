@@ -1,4 +1,4 @@
-PARALLELISM = 1
+PARALLELISM = 4
 
 class Array
   def x; first  end

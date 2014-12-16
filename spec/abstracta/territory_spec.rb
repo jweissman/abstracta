@@ -23,9 +23,17 @@ describe Territory do
       expect { subject.step }.to change { subject.size }.by(1)
     end
 
-    #it "should be safe to repeat several times" do
-    #  expect { 10.times { subject.step }}.not_to raise_error
-    #end
+    it 'should generate occupants with valid positions' do
+      10.times { subject.step }
+      subject.occupants.each do |occupant|
+	expect(occupant.x).to be_an(Integer)
+	expect(occupant.y).to be_an(Integer)
+      end
+    end
+    
+    it "should be safe to repeat many times" do
+      expect { 100.times { subject.step }}.not_to raise_error
+    end
   end
 end
 
