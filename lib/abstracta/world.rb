@@ -20,9 +20,10 @@ module Abstracta
     end
 
     # pick n territorities of size m
+    def territory_class; Territory end
     def create_territories(n=1,m=1)
       as = available.sample(m*n)
-      Array.new(n) { Territory.new(as.shift(m)) }
+      Array.new(n) { territory_class.new(as.shift(m)) }
     end
 
     def update_territories

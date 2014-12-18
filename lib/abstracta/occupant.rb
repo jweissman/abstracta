@@ -1,14 +1,12 @@
 module Abstracta
   class Occupant
     extend Forwardable
-    attr_reader :age, :alive, :color, :dna
+    attr_reader :age
     attr_reader :location
     def_delegators :location, :zip, :x, :y
 
-    def initialize(location=[0,0],color=:white,alive=true)
+    def initialize(location=[0,0])
       @location = location
-      @color    = color
-      @alive    = alive
       @age      = 0
       @size     = 1
     end

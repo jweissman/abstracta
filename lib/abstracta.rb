@@ -1,4 +1,3 @@
-require 'bindata'
 require 'parallel'
 
 require 'abstracta/version'

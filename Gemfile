@@ -1,7 +1,6 @@
 source "https://rubygems.org"
 
 gem "activesupport"    
-gem "bindata"
 gem "parallel"
 gem "ruby-progressbar"
 
