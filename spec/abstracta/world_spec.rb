@@ -6,12 +6,13 @@ include Abstracta
 describe World do
   let(:width)   { 10 }
   let(:height)  { 10 }
+  let(:geometry) { [width, height] }
 
-  subject { World.new(width: width, height: height) }
+  subject { World.new(geometry) }
 
   #let!(:field) { subject.field }
   let!(:territory) { subject.territories.first }
-  let!(:occupant) { subject.occupants.first }
+  #let!(:occupant) { subject.occupants.first }
 
   it 'should have an age' do
     expect(subject.age).to be_zero
@@ -31,7 +32,7 @@ describe World do
     context "with a given density" do
       let(:density) { 0.3 }
       let(:projected_count) { (width * height * density).to_i }
-      subject { World.new(width: width, height: height, density: density) }
+      subject { World.new(geometry, density: density) }
       let!(:actual_territory_count) { subject.territories.count }
 
       it "should have territories" do
@@ -49,18 +50,19 @@ describe World do
     end
 
     context "with a specified count" do
-      subject { World.new(width: width, height: height, territory_count: 3) }
-      it "shoud have 3 territories" do
-	expect(subject.territories.count).to eql(3)
+      N = 5
+      subject { World.new(geometry, territory_count: N) }
+      it "should have #{N} territories" do
+	expect(subject.territories.count).to eql(N)
 	expect(territory).to be_a(Territory)
       end
     end
   end
 
-  it "should be occupied" do 
-    expect(subject.occupants).not_to be_empty
-    expect(occupant).to be_a(Occupant)
-  end
+  #it "should be occupied" do 
+  #  expect(subject.occupants).not_to be_empty
+  #  expect(occupant).to be_a(Occupant)
+  #end
 
   context "#step" do
     it 'should age the world' do
@@ -69,10 +71,16 @@ describe World do
 
     it "should expand the territories" do
       expect { subject.step }.to change { territory.size }.by(1)
+      
     end
 
-    #it "should step safely for awhile" do
-    #  expect { 1000.times { subject.step }}.to_not raise_error
+    #context "growth behavior" do
+    #  before do
+    #    n.times { subject.step }
+    #  end
+    #  it 'should not have grown outside the territorial boundary' do
+    #  end
     #end
+
   end
 end

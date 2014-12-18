@@ -18,7 +18,12 @@ describe Abstracta::Grid do
     subject { Abstracta::Grid.new([2,2]) }
     let(:gathered) { subject.each { |x,y| [x,y] }}
     it 'should iterate over the grid' do
-      expect(gathered).to eql([[0,0],[0,1],[1,0],[1,1]])
+      expect(gathered.flatten(1)).to eql([[0,0],[0,1],[1,0],[1,1]])
     end
+  end
+
+  describe "#first" do
+    subject { Abstracta::Grid.new }
+    its(:first) { should eql([0,0]) }
   end
 end

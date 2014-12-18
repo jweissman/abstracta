@@ -8,6 +8,7 @@ require 'abstracta/occupant'
 require 'abstracta/territory'
 require 'abstracta/genome'
 require 'abstracta/world'
+require 'abstracta/explorer'
 require 'abstracta/engine'
 
 require 'active_support/core_ext/array'

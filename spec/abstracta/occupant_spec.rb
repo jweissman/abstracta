@@ -1,6 +1,8 @@
 require 'spec_helper'
 require 'bindata'
 
+require 'active_support/core_ext/array'
+require 'abstracta/extend/array'
 require 'abstracta/occupant' 
 
 describe Abstracta::Occupant do

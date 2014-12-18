@@ -9,6 +9,8 @@ module Abstracta
     #def_delegator :@dimensions, :z, :depth
     #def_delegator :@dimensions, :t, :duration
 
+    def_delegators :to_a, :flatten, :sample # :zip...
+
     DEFAULT_WIDTH = 10
     DEFAULT_HEIGHT = 10
 
@@ -18,15 +20,11 @@ module Abstracta
     end
 
     def each
-      elements = []
       Array.new(width) do |x|
 	Array.new(height) do |y|
-	  if (c=yield(x,y))
-	    elements << c 
-	  end
+	  yield(x,y)
 	end
       end
-      elements
     end
   end
 end

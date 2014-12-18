@@ -2,66 +2,42 @@ require 'parallel'
 module Abstracta
   class Territory
     extend Forwardable
-
-    attr_reader :age
-    attr_reader :occupants
-    attr_reader :dna
-
+    include Enumerable
+    attr_reader :age, :dna, :occupants, :compass
     def_delegators :dna, :growth_cycle, :growth_radius, :mobile, :sterile, :growth_limit
+    def_delegators :occupants, :[], :size, :each
 
-    def initialize(occupants=[])
-      raise "occupants is not an array?" unless occupants.is_a?(Array)
+    def_delegators :compass, :project, :move
 
-      @age = 0
-      @occupants = occupants
-      @dna = Genome.default
+    def initialize(locations=[])
       @compass = Compass.new
+      @occupants = locations.map { |l| Occupant.new([l.x,l.y]) }
+      @dna = Genome.default
+      @age = 0
     end
 
     def to_s
       "territory of size #{size} with genome #{dna}"
     end
 
-    def size; @occupants.size end
-
-    def adjacent_spaces
-      @occupants.collect { |o| @compass.project(o) }.flatten(1) #[o.x, o.y]) } 
-    end
-
-    # stuff that requires a world... let's factor this out somehow?
-
-    def step(world=nil)
+    def step(growth_targets=[])
       @age = @age + 1
-      grow(world) if @age % growth_cycle == 0
+      if @age % growth_cycle == 0 && !growth_targets.empty?
+	grow(growth_targets)
+      end
       @occupants.each(&:step)
     end
 
-    def grow_targets(world=nil)
-      return adjacent_spaces unless world
-      adjacent_spaces.select do |space|
-        world.available?(space)
-      end
+    def grow(available)
+      target = (available & adjacent).sample
+      @occupants << Occupant.new([target.x, target.y])
     end
 
-    def grow(world=nil)
-      target = grow_targets(world).sample
-      @occupants << Occupant.new(target.x, target.y)
+    #protected
+    # since technically we only need to project the edges
+    # this is maybe somewhat wasteful
+    def adjacent
+      map { |occupant| project(occupant) }.flatten(1).uniq - to_a
     end
-
-    def self.generate(n=1,world=nil)
-      new(Array.new(n) {Occupant.generate(world)}) 
-    end
-
-    #def contains?(x,y)
-    #  @occupants.any? { |(_x,_y)| x == _x && y == _y }
-    #end
-
-    #def grow(locations)
-    #  @territory + locations
-    #end
-
-    #def develop
-    #  @territory = grow(field.adjacent)
-    #end
   end
 end

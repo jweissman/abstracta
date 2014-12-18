@@ -1,40 +1,38 @@
 module Abstracta
   class World
-    attr_reader :age, :field, :territories
+    extend Forwardable
+    attr_reader :age, :grid, :territories, :explorer
+    def_delegators :explorer, :grid, :available
+    def_delegators :grid, :width, :height
 
-    def initialize(opts={})
-      @age = 0
-      @height, @width = opts.delete(:height) { 100 }, opts.delete(:width) { 100 }
+    def initialize(geometry=[100,100], opts={})
+      @explorer = Explorer.new(geometry)
+
       @density = opts.delete(:density) { 0.02 }
-      @territory_count = opts.delete(:territory_count) { @width * @height * @density }
-
-      @grid = Grid.new(@width, @height)
+      @territory_count = opts.delete(:territory_count) { width * height * @density }
+      @territories = []
       @territories = create_territories(@territory_count)
-    end
-
-    def occupants
-      @territories.map(&:occupants).flatten(1)
-    end
-
-    def create_territories(n=1)
-      Array.new(n) { Territory.generate }
-    end
-
-    def update_territories
-      @age = @age + 1
-      @territories.each(&:step)
+      @age = 0
     end
 
     def step
       update_territories
     end
 
-    def available?(position)
-      !occupants.any? { |p| p == position }
+    # pick n territorities of size m
+    def create_territories(n=1,m=1)
+      as = available.sample(m*n)
+      Array.new(n) { Territory.new(as.shift(m)) }
     end
 
-    def available
-      @grid.select { |p| available?(p) }
+    def update_territories
+      @age = @age + 1
+      @territories.each do |territory|
+	#neighbors = @territories - [territory] #.to_a
+	#available_targets = available(territory,neighbors) #@territories-territory.to_a)
+	#binding.pry
+	territory.step(available) #_targets)
+      end
     end
   end
 end

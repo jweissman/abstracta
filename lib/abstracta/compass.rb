@@ -6,6 +6,8 @@ module Abstracta
       @rose = rose
     end
 
+    # this method seems a little confusing...
+    # tempted to remove it honestly
     def project(point)
       deltas.collect { |dx| Compass.translate(point, dx) }
     end
