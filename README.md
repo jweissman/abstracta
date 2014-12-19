@@ -1,4 +1,62 @@
-# Abstracta
+## abstracta
+
+* [Homepage](https://rubygems.org/gems/abstracta)
+* [Documentation](http://rubydoc.info/gems/abstracta/frames)
+* [Email](mailto:jweissman1986 at gmail.com)
+
+## Description
+
+  Cellular automata framework for ruby
+
+## Features
+
+## Examples
+
+  Again, intentionally abstract, so there's not much output you can 
+  derive directly from interacting with it. It might go something like
+  this:
+
+    require 'abstracta'
+    world = Abstracta::World.new   # creates a sim space 
+    100.times { world.step }       # iterates/grows organisms
+
+  In any particular case you'll want to extend from these classes and build on top of
+  them. A concrete example from the Biosphere game (probably the place
+  to go right now for something to look at around this/inspiration):
+
+    class Cell < Abstracta::Occupant
+      def coordinates(cell_size=1)
+        x, y = cell.x * self.cell_size, cell.y * self.cell_size
+        x1, y1 = x + self.cell_size, y + self.cell_size
+        [[x,y], [x1,y], [x, y1], [x1,y1]]
+      end
+
+      def render(window, color=Gosu::Color::WHITE)
+        coords = coordinates(window.cell_size)
+        quad_args = coords.map{|c| c + [color] }
+        draw_quad(*quad_args) 
+      end
+    end
+
+## Requirements
+
+  Everything gosu needs, which is really not all that bad. But it's not exactly portable,
+  or easy stand up a dev environment through a simple provisioning script (though maybe a
+  little focused effort there could help containerize it.)
+
+## Install
+
+    $ gem install biosphere
+
+## Synopsis
+
+    $ biosphere
+
+## Copyright
+
+Copyright (c) 2014 Joseph Weissman
+
+See {file:LICENSE.txt} for details. Abstracta
 
 Cellular automata game :)
 

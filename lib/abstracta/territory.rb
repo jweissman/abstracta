@@ -20,7 +20,7 @@ module Abstracta
     def occupy(p); p.flatten!; occupant_class.new([p.x,p.y]) end
     def occupant_class; Occupant end
 
-    def step(growth_targets=[])
+    def step(growth_targets=adjacent)
       @occupants.each(&:step)
       @age = @age + 1
       grow(growth_targets, growth_rate * size)

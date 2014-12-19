@@ -2,7 +2,7 @@ module Abstracta
   class Compass
     attr_accessor :rose
 
-    def initialize(rose=Compass.extended_rose)
+    def initialize(rose=Compass.simple_rose)
       @rose = rose
     end
 
@@ -30,32 +30,34 @@ module Abstracta
       @rose.values
     end
 
-    def self.translate(point, delta)
-      point.zip(delta).map { |x,y| x + y }
-    end
-
-    def self.simple_rose
-      {
-	:north => [0, -1],
-	:south => [0,  1],
-	:east  => [1,  0],
-	:west  => [-1, 0]
-      } 
-    end
-
-    def self.combinate_rose(base_rose, axes)
-      combinations = axes[0].map do |y|
-	axes[1].map do |x|
-	  ["#{x}#{y}".to_sym, translate(simple_rose[x], simple_rose[y])]
-	end
+    class << self
+      def translate(point, delta)
+	point.zip(delta).map { |x,y| x + y }
       end
-      Hash[combinations.flatten(1)]
-    end
 
-    def self.extended_rose
-      simple_rose_axes = [[:east,:west],[:north, :south]]
-      combinated_rose = combinate_rose(simple_rose, simple_rose_axes)
-      simple_rose.merge(combinated_rose)
+      def simple_rose
+	{
+	  :north => [0, -1],
+	  :south => [0,  1],
+	  :east  => [1,  0],
+	  :west  => [-1, 0]
+	} 
+      end
+
+      def combinate_rose(base_rose, axes)
+	combinations = axes[0].map do |y|
+	  axes[1].map do |x|
+	    ["#{x}#{y}".to_sym, translate(simple_rose[x], simple_rose[y])]
+	  end
+	end
+	Hash[combinations.flatten(1)]
+      end
+
+      def extended_rose
+	simple_rose_axes = [[:east,:west],[:north, :south]]
+	combinated_rose = combinate_rose(simple_rose, simple_rose_axes)
+	simple_rose.merge(combinated_rose)
+      end
     end
   end
 end

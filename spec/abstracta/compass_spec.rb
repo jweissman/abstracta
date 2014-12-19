@@ -12,7 +12,7 @@ describe Compass do
   end
 
   it 'should project points' do
-    expect(subject.project(origin)).to eql(subject.class.extended_rose.values)
+    expect(subject.project(origin)).to eql(subject.class.simple_rose.values)
   end
 
   it 'should indicate the direction between adjacent points' do
