@@ -9,45 +9,19 @@ describe Territory do
     expect(subject.dna).to be_a OpenStruct
   end
 
-  # the implementation of this really closely maps to compasses so when
-  # we switch roses it all breaks -- very flaky
-  #describe "#adjacent" do
-  #  context "from origin" do
-  #    it 'should project nearby squares' do
-  #      expect(subject.adjacent).to eql([[0, -1], [0, 1], [1, 0], [-1, 0]])
-  #    end
-  #  end
-  #  
-  #  context "with multiple occupants" do
-  #    before { subject.step([[0,1]]) }
-  #    it 'should compute nearby, non-overlapping squares' do
-  #      expect(subject.adjacent).to eql([[0, -1], [0, 1], [1, 0], [-1, 0], [0, 0], [0, 2], [1, 1], [-1, 1]]) #[[1,0]])
-  #    end
-
-  #    # i.e.:
-  #    # |-|-|-|-|-|-|-|-|-|-|-|
-  #    # |-|-|-| * | * |-|-|-|-|
-  #    # |-|-|-|-|-|-|-|-|-|-|-|
-  #    # |-| * |   |   | * |-|-|
-  #    # |-|-|-|-|-|-|-|-|-|-|-|
-  #    # |-|-|-| * | * |-|-|-|-|
-  #    # |-|-|-|-|-|-|-|-|-|-|-|
-  #  end
-  #end
-
   describe "#step" do
     it "should age occupants" do
       expect { subject.step }.to change { subject.first.age }.by 1
     end
 
-    let(:cycle) { subject.growth.cycle }
+    let(:cycle) { subject.dna.growth.cycle }
 
     it "should grow total size" do
       expect { cycle.times { subject.step } }.to change { subject.size }.by(subject.projected_growth.to_i)
     end
 
     context "longterm growth behaviors" do
-      before { cycle.times { subject.step }} #.not_to raise_error }
+      before { cycle.times { subject.step }}
 
       it 'should generate occupants with valid positions' do
 	subject.occupants.each do |occupant|
@@ -61,12 +35,9 @@ describe Territory do
       end
 
       it "should not grow too much" do
-	expect(subject.size).not_to be > subject.growth.limit
+	expect(subject.size).not_to be > subject.dna.growth.limit
       end
     end
   end
-
-  #context "#grow" do
-  #end
 end
 

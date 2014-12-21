@@ -3,10 +3,9 @@ module Abstracta
     extend Forwardable
     attr_reader :worlds, :running
 
-    def initialize(steps: 0, active: false, world_count: 3, &blk)
-      @worlds = Array.new(world_count) { World.new }
+    def initialize(steps: 0, active: false, world_count: 1, &blk)
+      @worlds  = Array.new(world_count) { World.new }
       @running = active
-      puts "--- engine constructed!"
       step(steps,&blk)
     end
 

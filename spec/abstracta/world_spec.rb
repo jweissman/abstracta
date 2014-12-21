@@ -20,10 +20,10 @@ describe World do
 
   it 'should generate a territory' do
     expect(territory).to be_a(Territory)
+    expect(territory.size).to eql(1)
   end
 
   it 'should indicate what spaces is available' do
-    expect(subject.available.size).to eql(width * height - 1)
     expect(subject.occupied.size).to eql(1)
   end
 
@@ -75,7 +75,7 @@ describe World do
     end
 
     context "growth" do
-      let(:n) { 1000 }
+      let(:n) { 10 }
 
       before do
         n.times { subject.step }

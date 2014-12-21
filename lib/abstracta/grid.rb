@@ -3,28 +3,35 @@ module Abstracta
     extend Forwardable
     include Enumerable
 
-    attr_reader :dimensions
-    def_delegator :@dimensions, :x, :width
-    def_delegator :@dimensions, :y, :height
-    #def_delegator :@dimensions, :z, :depth
-    #def_delegator :@dimensions, :t, :duration
+    attr_reader :dimensions, :elements
+    def_delegator :dimensions, :x, :width
+    def_delegator :dimensions, :y, :height
+    def_delegators :elements, :each, :sample, :flatten, :to_a
 
-    def_delegators :to_a, :flatten, :sample # :zip...
-
-    DEFAULT_WIDTH = 10
-    DEFAULT_HEIGHT = 10
-
-    def initialize(geometry=[DEFAULT_WIDTH,DEFAULT_HEIGHT], compass=Compass.new, opts={}, &blk)
+    def initialize(geometry=[10,10], compass=Compass.new, opts={}, &blk)
       @dimensions = geometry
       @compass    = compass
+      compute_elements
+    end
+
+    def compute_elements
+      @elements = []
+      width.times do |x|
+	height.times do |y|
+	  @elements << [x,y]
+	end
+      end
     end
 
     def each
-      Array.new(width) do |x|
-	Array.new(height) do |y|
-	  yield(x,y)
-	end
-      end
+      @elements.each { |p| yield(p) }
+    end
+
+    def clip(xys=[])
+      xys.reject do |xy|
+	x,y = *xy
+	x < 0 || y < 0 || x >= width || y >= height
+      end 
     end
   end
 end

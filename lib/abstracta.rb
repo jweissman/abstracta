@@ -17,9 +17,6 @@ require 'abstracta/extend/range'
 
 module Abstracta
   def self.bootstrap!(opts={},&blk)
-    puts "=== abstracta v#{Abstracta::VERSION}"
-    puts "--- called with opts: #{opts}"
-    puts "--- block given" if block_given?
     Engine.boot(opts,&blk)
   end
 end
