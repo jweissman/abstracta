@@ -1,20 +1,37 @@
-
 module Abstracta
   class Engine
     extend Forwardable
-    attr_reader :worlds
+    attr_reader :worlds, :running
 
-    def initialize
-      world_count = 1
+    def initialize(steps: 0, active: false, world_count: 3, &blk)
       @worlds = Array.new(world_count) { World.new }
-      #@log = Logger.new
-      #@worlds.map(&:events).each { |stream| stream.on_value(&:react) }
+      @running = active
+      puts "--- engine constructed!"
+      step(steps,&blk)
     end
 
-    def step; @worlds.map(&:step) end
-    #def react(event)
-    #  puts ">>> Event: #{event}"
-    #  @log.info event
-    #end
+    def step(n=1,&blk)
+      print '.'
+      n.times do 
+	@worlds.map(&:step)
+	blk.call(self) if block_given?
+      end
+      self 
+    end
+
+    def turn(&blk)
+      @running = true
+      Thread.new do
+	while @running 
+	  step(&blk)
+	end
+      end
+    end
+
+    def halt; @running = false end
+
+    def self.boot(opts={},&blk)
+      new(opts,&blk)
+    end
   end
 end

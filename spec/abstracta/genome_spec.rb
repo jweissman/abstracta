@@ -1,4 +1,6 @@
 require 'spec_helper'
+require 'ostruct'
+require 'abstracta/extend/range'
 require 'abstracta/genome'
 
 describe Abstracta::Genome do
@@ -6,9 +8,11 @@ describe Abstracta::Genome do
 
   context "defaults" do
     it 'should have sane options' do
-      expect(subject.mobile).to be(true)
-      expect(subject.sterile).to be(false)
-      expect(subject.growth_limit).to eql(10)
+      #expect(subject.mobile).to be(true)
+      #expect(subject.sterile).to be(false)
+      expect(subject.growth.limit).to  be_an(Integer) #eql(10)
+      expect(subject.growth.radius).to be_an(Integer) #eql(10)
+
     end
   end
 end

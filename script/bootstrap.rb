@@ -1,21 +1,17 @@
-#!/usr/bin/env ruby
+#!/usr/bin/enb ruby
 
+#
 root = File.expand_path(File.join(File.dirname(__FILE__),'..'))
 if File.directory?(File.join(root,'.git'))
   Dir.chdir(root) do
     begin
       require 'bundler/setup'
+      require 'abstracta'
+      Engine.boot
     rescue LoadError => e
       warn e.message
       warn "Run `gem install bundler` to install Bundler"
       exit(-1)
     end
   end
-end
-
-require 'abstracta'
-require 'profile'
-Abstracta.bootstrap!(steps: 100, world_count: 10) do |sim|
-  world = sim.worlds.first
-  puts "=== tick #{world.age}"
 end

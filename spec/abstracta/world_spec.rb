@@ -8,7 +8,7 @@ describe World do
   let(:height)  { 10 }
   let(:geometry) { [width, height] }
 
-  subject { World.new(geometry) }
+  subject { World.new(geometry, territory_count: 1) }
 
   #let!(:field) { subject.field }
   let!(:territory) { subject.territories.first }
@@ -20,6 +20,11 @@ describe World do
 
   it 'should generate a territory' do
     expect(territory).to be_a(Territory)
+  end
+
+  it 'should indicate what spaces is available' do
+    expect(subject.available.size).to eql(width * height - 1)
+    expect(subject.occupied.size).to eql(1)
   end
 
   #it "should construct a field" do
@@ -69,18 +74,17 @@ describe World do
       expect { subject.step }.to change { subject.age }.by(1)
     end
 
-    it "should expand the territories" do
-      expect { subject.step }.to change { territory.size }.by(1)
-      
+    context "growth" do
+      let(:n) { 1000 }
+
+      before do
+        n.times { subject.step }
+      end
+
+      it 'should not have grown outside the territorial boundary' do
+        within_bounds = subject.occupied.all? { |p| subject.grid.include?(p) }
+        expect(within_bounds).to be(true)
+      end
     end
-
-    #context "growth behavior" do
-    #  before do
-    #    n.times { subject.step }
-    #  end
-    #  it 'should not have grown outside the territorial boundary' do
-    #  end
-    #end
-
   end
 end

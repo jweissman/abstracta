@@ -1,14 +1,14 @@
 module Abstracta
   class World
     extend Forwardable
-    attr_reader :age, :grid, :territories, :explorer
-    def_delegators :explorer, :grid, :available
+    attr_reader :age, :grid, :territories
     def_delegators :grid, :width, :height
 
-    def initialize(geometry=[100,100], opts={})
-      @explorer = Explorer.new(geometry)
+    def initialize(geometry=[5,5], opts={})
+      @grid = Grid.new(geometry)
+      @compass = Compass.new
 
-      @density = opts.delete(:density) { 0.02 }
+      @density = opts.delete(:density) { 0.05 }
       @territory_count = opts.delete(:territory_count) { width * height * @density }
       @territories = []
       @territories = create_territories(@territory_count)
@@ -16,7 +16,20 @@ module Abstracta
     end
 
     def step
+      @age = @age + 1
       update_territories
+    end
+
+    def occupied
+      territories.map(&:occupants).flatten.map(&:location)
+    end
+
+    def space
+      @space ||= @grid.to_a
+    end
+
+    def available
+      space - occupied
     end
 
     # pick n territorities of size m
@@ -27,12 +40,8 @@ module Abstracta
     end
 
     def update_territories
-      @age = @age + 1
       @territories.each do |territory|
-	#neighbors = @territories - [territory] #.to_a
-	#available_targets = available(territory,neighbors) #@territories-territory.to_a)
-	#binding.pry
-	territory.step(available) #_targets)
+	territory.step(available)
       end
     end
   end
