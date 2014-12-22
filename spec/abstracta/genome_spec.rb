@@ -11,7 +11,7 @@ describe Abstracta::Genome do
       #expect(subject.mobile).to be(true)
       #expect(subject.sterile).to be(false)
       expect(subject.growth.limit).to  be_an(Integer) #eql(10)
-      expect(subject.growth.radius).to be_an(Integer) #eql(10)
+      #expect(subject.growth.radius).to be_an(Integer) #eql(10)
 
     end
   end

@@ -21,6 +21,7 @@ module Abstracta
 	  @elements << [x,y]
 	end
       end
+      @elements
     end
 
     def each

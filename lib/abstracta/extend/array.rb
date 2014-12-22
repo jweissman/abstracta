@@ -1,4 +1,4 @@
-PARALLELISM = 4
+PARALLELISM = 1
 
 class Array
   def x; first  end
@@ -14,6 +14,14 @@ class Array
     sum / size
   end  
 
+  def parallel_map(name="please wait...", &blk)
+    if PARALLELISM == 1
+      map(&blk)
+    else
+      Parallel.map(self, in_threads: PARALLELISM, progress: name, &blk)
+    end
+  end
+
   def parallel_each(name="please wait...", &blk)
     if PARALLELISM == 1
       each(&blk)
@@ -21,6 +29,7 @@ class Array
       Parallel.each(self, in_threads: PARALLELISM, progress: name, &blk)
     end
   end
+
 
   ###
   #

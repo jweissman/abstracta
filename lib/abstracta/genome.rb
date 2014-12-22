@@ -8,14 +8,14 @@ module Abstracta
 	#growth_rate: (15..100).sample / 10.0,
 
 	growth: OpenStruct.new(
-	  cycle:  (2..4).sample,
-	  limit:  (20..80).sample,
-	  radius: (1..2).sample,
-	  rate:   (20..30).sample / 10.0,
-        )
+	  cycle:  2, #(2..4).sample,
+	  limit:  100, #(20..80).sample,
+	  #radius: (1..2).sample,
+	  rate:   2, #(1..4).sample #(150..200).sample / 100.0,
+        ),
 
 	# TODO make these do something!
-	#age_bound: 100,
+	age_bound: 20 #(3..9).sample,
 	#influence_radius: 10,
 	#sterile: false, 
 	#sticky: false,

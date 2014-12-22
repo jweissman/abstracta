@@ -4,7 +4,7 @@ module Abstracta
     attr_accessor :rose
     def_delegator :rose, :project
 
-    def initialize(rose=Rose.simple)
+    def initialize(rose=Rose.extended)
       @rose = rose
     end
 

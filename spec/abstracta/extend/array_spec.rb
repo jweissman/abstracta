@@ -15,16 +15,16 @@ describe Array do
     expect(subject.t).to eql(0)
   end
 
-  it 'should process in parallel' do
-    expect(subject).to respond_to(:parallel_each)
-    expect(Parallel).to receive(:each)
+  #it 'should process in parallel' do
+  #  expect(subject).to respond_to(:parallel_each)
+  #  expect(Parallel).to receive(:each)
 
-    expect { subject.parallel_each(&method(:print)) }.to_not raise_error
-  end
+  #  expect { subject.parallel_each(&method(:print)) }.to_not raise_error
+  #end
 
-  it 'should fallback to #each if PARALLELISM=1' do
-    Object.const_set(:PARALLELISM, 1)
-    expect(subject).to receive(:each)
-    subject.parallel_each(&method(:print))
-  end
+  #it 'should fallback to #each if PARALLELISM=1' do
+  #  Object.const_set(:PARALLELISM, 1)
+  #  expect(subject).to receive(:each)
+  #  subject.parallel_each(&method(:print))
+  #end
 end

@@ -5,10 +5,10 @@ module Abstracta
     def_delegators :grid, :width, :height
     def_delegators :compass, :distance_from
 
-    def initialize(geometry=[10,10], opts={})
+    def initialize(geometry=[100,100], opts={})
       @grid            = Grid.new(geometry)
       @compass         = Compass.default
-      @density         = opts.delete(:density) { 0.5 }
+      @density         = opts.delete(:density) { 0.05 }
       @territory_count = opts.delete(:territory_count) { width * height * @density }
       @territories = []
       @territories = create_territories(@territory_count)
@@ -37,7 +37,7 @@ module Abstracta
     def update_territories
       @territories.each do |territory|
 	update_map
-	targets = compute_adjacent_available(territory)
+	targets = compute_projected_targets(territory)
 	territory.step(targets) 
       end
     end
@@ -54,17 +54,12 @@ module Abstracta
       @occupied.include?(xy)
     end
 
-    def center
-      [@occupied.map(&:x).mean.to_i, @occupied.map(&:y).mean.to_i]
+    def compute_projected_targets(territory, n=territory.projected_growth)
+      available_adjacent(territory).take(n)
     end
 
-    def distance_from_center(p)
-      Compass.distance(center,p)
-    end
-
-    def compute_adjacent_available(territory, n=territory.projected_growth)
-      available_adjacent = territory.adjacent.reject(&method(:occupied?)) # { |xy| occupied.include?(xy) } # & available # - occupied
-      @grid.clip(available_adjacent).sort_by(&method(:distance_from_center)).take(n) 
+    def available_adjacent(territory)
+      @grid.clip territory.adjacent.reject(&method(:occupied?)) # { |xy| occupied.include?(xy) } # & available # - occupied
     end
   end
 end
