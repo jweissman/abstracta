@@ -1,5 +1,6 @@
 ## abstracta
 
+![Codeship Badge](https://codeship.com/projects/3d50a570-6c46-0132-a8ac-2258e2e8174d/status?branch=master)
 * [Homepage](https://rubygems.org/gems/abstracta)
 * [Documentation](http://rubydoc.info/gems/abstracta/frames)
 * [Email](mailto:jweissman1986 at gmail.com)
