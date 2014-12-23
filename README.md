@@ -1,6 +1,8 @@
 ## abstracta
 
-![Codeship Badge](https://codeship.com/projects/3d50a570-6c46-0132-a8ac-2258e2e8174d/status?branch=master)
+[![Codeship Badge](https://codeship.com/projects/3d50a570-6c46-0132-a8ac-2258e2e8174d/status?branch=master)](https://codeship.com/projects/54005)
+[![Code Climate](https://codeclimate.com/github/jweissman/abstracta/badges/gpa.svg)](https://codeclimate.com/github/jweissman/abstracta)
+
 * [Homepage](https://rubygems.org/gems/abstracta)
 * [Documentation](http://rubydoc.info/gems/abstracta/frames)
 * [Email](mailto:jweissman1986 at gmail.com)
