@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "straightedge", github: "jweissman/straightedge"
+gem "straightedge"
 gem "activesupport"    
 gem "parallel"
 gem "ruby-progressbar"
