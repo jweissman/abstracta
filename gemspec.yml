@@ -7,8 +7,8 @@ email: jweissman1986@gmail.com
 homepage: https://rubygems.org/gems/abstracta
 
 dependencies:
-  parallel: ~> 1.3.3
   activesupport: ~> 4.2.0
+  straightedge: ~> 0.1.0
 
 development_dependencies:
   bundler: ~> 1.0
