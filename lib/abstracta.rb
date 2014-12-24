@@ -12,7 +12,4 @@ require 'abstracta/extend/range'
 
 module Abstracta
   include Straightedge
-  def self.bootstrap!(opts={},&blk)
-    Engine.boot(opts,&blk)
-  end
 end

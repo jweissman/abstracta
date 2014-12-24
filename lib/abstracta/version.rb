@@ -1,7 +1,7 @@
 module Abstracta
   VERSION   = "0.1.1"
   RELEASE   = "prealpha"
-  CRYPTONYM = "aqua-prism"
+  CRYPTONYM = "turquoise-polygon"
   AUTHOR    = "Joseph Weissman <jweissman1986@gmail.com>"
 
   def self.version

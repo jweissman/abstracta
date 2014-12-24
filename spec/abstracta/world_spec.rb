@@ -10,9 +10,7 @@ describe World do
 
   subject { World.new(geometry, territory_count: 1) }
 
-  #let!(:field) { subject.field }
   let!(:territory) { subject.territories.first }
-  #let!(:occupant) { subject.occupants.first }
 
   it 'should have an age' do
     expect(subject.age).to be_zero
@@ -26,12 +24,6 @@ describe World do
   it 'should indicate what spaces is available' do
     expect(subject.occupied.size).to eql(1)
   end
-
-  #it "should construct a field" do
-  #  expect(field.any?).to eql(true) 
-  #  expect(field.width).to eql(width)
-  #  expect(field.height).to eql(height)
-  #end
 
   context "territory creation" do
     context "with a given density" do
@@ -63,11 +55,6 @@ describe World do
       end
     end
   end
-
-  #it "should be occupied" do 
-  #  expect(subject.occupants).not_to be_empty
-  #  expect(occupant).to be_a(Occupant)
-  #end
 
   context "#step" do
     it 'should age the world' do

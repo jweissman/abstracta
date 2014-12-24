@@ -13,3 +13,5 @@ group :development do
   gem "coco"
   gem "pry"
 end
+
+gem "codeclimate-test-reporter", group: :test, require: nil

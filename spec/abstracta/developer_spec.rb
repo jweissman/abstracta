@@ -13,10 +13,6 @@ describe TerritoryDeveloper do
       expect { subject.step }.to change { subject.first.age }.by 1
     end
 
-    #it "should grow to a specific location" do
-    #  expect { subject.step([[0,1]]) }.to change { subject.size }.by(1)
-    #end
-
     let(:cycle) { subject.period }
 
     it "should grow total size" do

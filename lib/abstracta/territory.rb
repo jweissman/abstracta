@@ -15,7 +15,7 @@ module Abstracta
     attr_reader :period, :limit
 
     def initialize(locations=[[0,0]],genome=Genome.default)
-      @compass   = Compass.default
+      @compass   = Straightedge::Compass.default
       @occupants = locations.map(&method(:occupant_at))
 
       @dna       = genome.tap do |my|

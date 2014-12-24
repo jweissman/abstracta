@@ -8,16 +8,15 @@ module Abstracta
     #def_delegators :compass, :distance_from
 
     def initialize(geometry=[100,100], opts={})
-      @grid            = Grid.new(geometry)
-      #@compass         = Compass.default
+      @age = 0
+
+      @grid            = Straightedge::Grid.new(geometry)
       @density         = opts.delete(:density) { 0.05 }
 
       @territory_count = opts.delete(:territory_count) { width * height * @density }
       @territories = []
       @territories = create_territories(@territory_count)
       update_map
-
-      @age = 0
 
       @developer = WorldDeveloper.new(self)
     end
@@ -36,20 +35,6 @@ module Abstracta
       @age = @age + 1
     end
 
-    #def step
-    #  old_size = occupied.size
-    #  update_territories
-    #  occupied.size - old_size
-    #end
-
-    #def update_territories
-    #  @territories.each do |territory|
-    #    update_map
-    #    targets = compute_projected_targets(territory)
-    #    territory.step(targets) 
-    #  end
-    #end
-
     def occupied
       @occupied ||= compute_occupied
     end
@@ -67,7 +52,7 @@ module Abstracta
     end
 
     def available_adjacent(territory)
-      @grid.clip territory.adjacent.reject(&method(:occupied?)) # { |xy| occupied.include?(xy) } # & available # - occupied
+      @grid.clip territory.adjacent.reject(&method(:occupied?))
     end
   end
 end
