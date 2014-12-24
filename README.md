@@ -10,9 +10,12 @@
 
 ## Description
 
-  Cellular automata framework for ruby
+  Cellular automata framework for Ruby
 
 ## Features
+
+  * 2-d grid of cells grouped logically into organisms
+  * Cell growth behavior governed by easily-configurable "genome"
 
 ## Examples
 

@@ -9,8 +9,6 @@ group :development do
   gem "rack-test"
   gem "rake"
   gem "rspec"
-  gem "rspec-its"
-  gem "coco"
   gem "pry"
 end
 
