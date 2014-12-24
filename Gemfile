@@ -4,8 +4,6 @@ gemspec
 
 gem "straightedge"
 gem "activesupport"    
-gem "parallel"
-gem "ruby-progressbar"
 
 group :development do
   gem "rack-test"

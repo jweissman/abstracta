@@ -1,4 +1,3 @@
-require 'parallel'
 require 'ostruct'
 
 require 'straightedge'
