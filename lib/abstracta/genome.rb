@@ -11,7 +11,11 @@ module Abstracta
 	  cycle:  2, #(2..4).sample,
 	  limit:  100, #(20..80).sample,
 	  #radius: (1..2).sample,
-	  rate:   2, #(1..4).sample #(150..200).sample / 100.0,
+	  rate: OpenStruct.new(
+	    additive: 2,
+	    multiplicative: 1.05
+          )
+	  #2, #(1..4).sample #(150..200).sample / 100.0,
         ),
 
 	# TODO make these do something!

@@ -1,7 +1,5 @@
 require 'spec_helper'
-
-require 'active_support/core_ext/array'
-require 'abstracta/extend/array'
+require 'straightedge'
 require 'abstracta/occupant' 
 
 describe Abstracta::Occupant do

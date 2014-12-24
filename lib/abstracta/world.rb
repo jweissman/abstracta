@@ -1,20 +1,25 @@
 module Abstracta
   class World
     extend Forwardable
-    attr_reader :age, :grid, :territories, :compass
+    attr_reader :age, :grid, :territories, :developer
+
     def_delegators :grid, :width, :height
-    def_delegators :compass, :distance_from
+    def_delegators :developer, :step
+    #def_delegators :compass, :distance_from
 
     def initialize(geometry=[100,100], opts={})
       @grid            = Grid.new(geometry)
-      @compass         = Compass.default
+      #@compass         = Compass.default
       @density         = opts.delete(:density) { 0.05 }
+
       @territory_count = opts.delete(:territory_count) { width * height * @density }
       @territories = []
       @territories = create_territories(@territory_count)
       update_map
 
       @age = 0
+
+      @developer = WorldDeveloper.new(self)
     end
 
     def update_map
@@ -27,20 +32,23 @@ module Abstracta
       Array.new(n) { territory_class.new([seeds.pop]) }
     end
 
-    def step
-      old_size = occupied.size
+    def age!
       @age = @age + 1
-      update_territories
-      occupied.size - old_size
     end
 
-    def update_territories
-      @territories.each do |territory|
-	update_map
-	targets = compute_projected_targets(territory)
-	territory.step(targets) 
-      end
-    end
+    #def step
+    #  old_size = occupied.size
+    #  update_territories
+    #  occupied.size - old_size
+    #end
+
+    #def update_territories
+    #  @territories.each do |territory|
+    #    update_map
+    #    targets = compute_projected_targets(territory)
+    #    territory.step(targets) 
+    #  end
+    #end
 
     def occupied
       @occupied ||= compute_occupied
@@ -54,7 +62,7 @@ module Abstracta
       @occupied.include?(xy)
     end
 
-    def compute_projected_targets(territory, n=territory.projected_growth)
+    def compute_projected_targets(territory, n=territory.growth)
       available_adjacent(territory).take(n)
     end
 
