@@ -3,17 +3,17 @@ module Abstracta
     extend Forwardable
     attr_reader :age, :grid, :territories, :developer
 
-    def_delegators :grid, :width, :height
+    def_delegators :grid, :x, :y
     def_delegators :developer, :step
     #def_delegators :compass, :distance_from
 
     def initialize(geometry=[100,100], opts={})
       @age = 0
 
-      @grid            = Straightedge::Grid.new(geometry)
+      @grid            = Grid.new(geometry)
       @density         = opts.delete(:density) { 0.05 }
 
-      @territory_count = opts.delete(:territory_count) { width * height * @density }
+      @territory_count = opts.delete(:territory_count) { x * y * @density }
       @territories = []
       @territories = create_territories(@territory_count)
       update_map

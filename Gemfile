@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "straightedge"
+gem "straightedge", path: "../straightedge"
 gem "activesupport"    
 
 group :development do

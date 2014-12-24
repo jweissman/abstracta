@@ -12,4 +12,5 @@ require 'abstracta/extend/range'
 
 module Abstracta
   include Straightedge
+  include Straightedge::Figures
 end
