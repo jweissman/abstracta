@@ -5,6 +5,10 @@ if File.directory?(File.join(root,'.git'))
   Dir.chdir(root) do
     begin
       require 'bundler/setup'
+      require 'straightedge/gosu'
+      require 'abstracta'
+
+      Straightedge.bootstrap
     rescue LoadError => e
       warn e.message
       warn "Run `gem install bundler` to install Bundler"
@@ -12,7 +16,3 @@ if File.directory?(File.join(root,'.git'))
     end
   end
 end
-
-require 'abstracta'
-
-# TODO sim process...

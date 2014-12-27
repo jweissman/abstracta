@@ -5,6 +5,9 @@ gemspec
 gem "straightedge", path: "../straightedge"
 gem "activesupport"    
 
+gem "gosu"
+gem "straightedge-gosu", path: "../straightedge-gosu"
+
 group :development do
   gem "rack-test"
   gem "rake"

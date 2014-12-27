@@ -1,5 +1,6 @@
 module Abstracta
   class Territory
+    include Straightedge
     include Enumerable
     extend Forwardable
 
@@ -13,9 +14,10 @@ module Abstracta
     attr_reader :compass, :developer
     attr_reader :age
     attr_reader :period, :limit
+    attr_reader :color
 
     def initialize(locations=[[0,0]],genome=Genome.default)
-      @compass   = Straightedge::Compass.default
+      @compass   = Compass.default
       @occupants = locations.map(&method(:occupant_at))
 
       @dna       = genome.tap do |my|
@@ -28,6 +30,8 @@ module Abstracta
       @age       = 0
 
       @developer = TerritoryDeveloper.new(self)
+
+      @color = Colors.pick
     end
 
     def age! 
@@ -47,7 +51,7 @@ module Abstracta
     end
 
     def occupant_at(point)
-      occupant_class.new([point.x, point.y]) 
+      occupant_class.new([point.x, point.y], color: @color) 
     end
 
     def occupy!(target)

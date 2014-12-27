@@ -1,23 +1,19 @@
 module Abstracta
-  class World
+  class World < Straightedge::Figures::Grid
     extend Forwardable
-    attr_reader :age, :grid, :territories, :developer
-
-    def_delegators :grid, :x, :y
+    attr_reader :age, :scale, :territories, :developer
     def_delegators :developer, :step
-    #def_delegators :compass, :distance_from
 
-    def initialize(geometry=[100,100], opts={})
-      @age = 0
-
-      @grid            = Grid.new(geometry)
+    def initialize(geometry=[10,10], opts={})
+      super(geometry)
+      @scale = opts.delete(:scale) { 50.0 }
+      @age             = 0
       @density         = opts.delete(:density) { 0.05 }
-
       @territory_count = opts.delete(:territory_count) { x * y * @density }
       @territories = []
       @territories = create_territories(@territory_count)
-      update_map
 
+      update_map
       @developer = WorldDeveloper.new(self)
     end
 
@@ -27,7 +23,7 @@ module Abstracta
 
     def territory_class; Territory end
     def create_territories(n=1)
-      seeds = @grid.sample(n)
+      seeds = sample(n)
       Array.new(n) { territory_class.new([seeds.pop]) }
     end
 
@@ -39,12 +35,30 @@ module Abstracta
       @occupied ||= compute_occupied
     end
 
+    def occupants
+      territories.map(&:occupants).flatten
+    end
+
     def compute_occupied
-      territories.map(&:occupants).flatten.map(&:location)
+      @occupied = occupants.flatten.map(&:location)
     end
 
     def occupied?(xy)
-      @occupied.include?(xy)
+      occupied.include?(xy)
+    end
+
+    def territory_at(xy)
+      territories.detect { |t| t.occupants.map(&:location).include?(xy) }
+    end
+
+    def at(xy)	
+      c = color_at(xy)
+      Straightedge::Figures::Mark.new(*xy, color: c) # color_at(xy))
+    end
+
+    def color_at(xy)
+      compute_occupied if occupied?(xy) && !territory_at(xy)
+      occupied?(xy) ? territory_at(xy).color : :none
     end
 
     def compute_projected_targets(territory, n=territory.growth)

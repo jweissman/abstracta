@@ -8,12 +8,12 @@ module Abstracta
 	#growth_rate: (15..100).sample / 10.0,
 
 	growth: OpenStruct.new(
-	  cycle:  2, #(2..4).sample,
-	  limit:  100, #(20..80).sample,
+	  cycle:  10, #(2..4).sample,
+	  limit:  10, #(20..80).sample,
 	  #radius: (1..2).sample,
 	  rate: OpenStruct.new(
 	    additive: 2,
-	    multiplicative: 1.05
+	    multiplicative: 1.25
           )
 	  #2, #(1..4).sample #(150..200).sample / 100.0,
         ),

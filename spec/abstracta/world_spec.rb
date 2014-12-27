@@ -69,7 +69,7 @@ describe World do
       end
 
       it 'should not have grown outside the territorial boundary' do
-        within_bounds = subject.occupied.all? { |p| subject.grid.include?(p) }
+        within_bounds = subject.occupied.all? { |p| subject.include?(p) }
         expect(within_bounds).to be(true)
       end
     end
