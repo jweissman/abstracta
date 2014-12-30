@@ -5,11 +5,11 @@ module Abstracta
     attr_reader :location
     def_delegators :location, :zip, :x, :y
 
-    def initialize(location=[0,0], color: :white)
+    def initialize(location=[0,0]) #, color: :white)
       @location = location
       @age      = 0
       @size     = 1
-      @color    = :white
+      #@color    = white
     end
 
     def position; [@x,@y] end
@@ -18,4 +18,6 @@ module Abstracta
       @age = @age + 1
     end
   end
+
+  config.occupant_class = Occupant
 end

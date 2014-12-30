@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'straightedge'
-require 'abstracta/occupant' 
+require 'abstracta' #/occupant' 
 
 describe Abstracta::Occupant do
   it 'should have a position' do

@@ -4,9 +4,9 @@ require 'abstracta'
 include Abstracta
 
 describe World do
-  let(:width)   { 100 }
-  let(:height)  { 100 }
-  let(:geometry) { [width, height] }
+  let(:w)   { 100 }
+  let(:h)   { 100 }
+  let(:geometry) { [w,h] }
 
   subject { World.new(geometry, territory_count: 1) }
 
@@ -28,7 +28,7 @@ describe World do
   context "territory creation" do
     context "with a given density" do
       let(:density) { 0.3 }
-      let(:projected_count) { (width * height * density).to_i }
+      let(:projected_count) { (w * h * density).to_i }
       subject { World.new(geometry, density: density) }
       let!(:actual_territory_count) { subject.territories.count }
 

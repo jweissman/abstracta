@@ -19,19 +19,20 @@ module Abstracta
     def initialize(locations=[[0,0]],genome=Genome.default)
       @compass   = Compass.default
       @occupants = locations.map(&method(:occupant_at))
+      @age       = 0
+      @developer = TerritoryDeveloper.new(self)
+      @color     = Colors.pick #hex_value(Colors.pick)
 
+      parse_dna(genome)
+    end
+
+    def parse_dna(genome)
       @dna       = genome.tap do |my|
         @period    = my.growth.cycle
         @rate      = my.growth.rate
         @limit     = my.growth.limit
         @max_age   = my.age_bound
       end
-
-      @age       = 0
-
-      @developer = TerritoryDeveloper.new(self)
-
-      @color = Colors.pick
     end
 
     def age! 
@@ -46,12 +47,8 @@ module Abstracta
       projected_size - size 
     end
 
-    def occupant_class
-      Occupant 
-    end
-
     def occupant_at(point)
-      occupant_class.new([point.x, point.y], color: @color) 
+      Abstracta.new_occupant([point.x, point.y])
     end
 
     def occupy!(target)
@@ -64,4 +61,6 @@ module Abstracta
       end
     end
   end
+
+  config.territory_class = Territory
 end
