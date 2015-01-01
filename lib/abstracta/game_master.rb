@@ -3,7 +3,9 @@ module Abstracta
     def current_scene
       {
 	[0, 0]  => world,
-	[10,10] => "abstracta v#{Abstracta::VERSION}"
+	[10,10] => "abstracta v#{Abstracta::VERSION}",
+	[10,30] => world.age.to_s,
+	[10,50] => world.status
       }
     end
 

@@ -4,8 +4,8 @@ require 'abstracta'
 include Abstracta
 
 describe World do
-  let(:w)   { 100 }
-  let(:h)   { 100 }
+  let(:w)   { 20 }
+  let(:h)   { 20 }
   let(:geometry) { [w,h] }
 
   subject { World.new(geometry, territory_count: 1) }

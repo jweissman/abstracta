@@ -2,11 +2,11 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "straightedge", path: "../straightedge"
+gem "straightedge", github: "jweissman/straightedge"
 gem "activesupport"    
 
 gem "gosu"
-gem "straightedge-gosu", path: "../straightedge-gosu"
+gem "straightedge-gosu", github: "jweissman/straightedge-gosu"
 
 group :development do
   gem "rack-test"

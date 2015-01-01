@@ -1,50 +1,53 @@
 module Abstracta
   class World < Straightedge::Figures::Grid
+    include Entity
     extend Forwardable
 
-    attr_reader :age, :scale, :territories, :developer
-    def_delegators :developer, :step
+    def_delegator :occupants, :size
 
-    def initialize(dimensions=Straightedge.config.geometry, opts={})
-      @age             = 0
+    attr_accessor :scale, :territories, :status
+
+    def initialize(dimensions=Abstracta.config.geometry, opts={})
       @dimensions      = dimensions
-      puts "--- creating world with dimensions #{@dimensions}"
+      #puts "--- creating world with dimensions #{@dimensions}"
       @density         = opts.delete(:density)         { Abstracta.config.density }
       @territory_count = opts.delete(:territory_count) { width * height * @density }
       @scale           = opts.delete(:scale)           { Abstracta.config.scale }
+      @status = "Initializing"
       super(dimensions, scale: @scale)
-
+       
       create_territories(@territory_count)
-      puts "--- created #{@territories.size} territories"
-      @developer = WorldDeveloper.new(self)
+      #puts "--- created #{@territories.size} territories"
     end
 
-    def each_cell
-      occupied.each do |xy| 
-	yield Straightedge::Figures::Quadrilateral.new(location: to_pixels(xy), color: color_at(xy), dimensions: [@scale, @scale])
-      end
-    end
-
-    def update_map
-      @occupied = compute_occupied
+    def projected_growth
+      @territories.sum(&:growth) # { |t| t.projected_growth
     end
 
     def create_territories(n)
-      puts "--- creating #{n} territories!"
       @territories = []
       sample(n).each do |seed|
-	puts "--- creating territory at #{seed}"
 	@territories << territory_at([seed])
       end
-      update_map
+    end
+
+    def visible?(xy)
+      occupied.include?(xy) 
+    end
+
+    def color_at(xy)
+      occupied?(xy) ? detect_territory_at(xy).color : :none
+    end
+
+    def each_cell
+      each do |xy| 
+	cell = cell_at xy
+	yield cell if cell && visible?(xy)
+      end
     end
 
     def territory_at(xys)
       Abstracta.new_territory(xys)
-    end
-
-    def age!
-      @age = @age + 1
     end
 
     def occupied
@@ -52,40 +55,33 @@ module Abstracta
     end
 
     def occupants
-      territories.map(&:occupants).flatten
+      @occupants ||= compute_occupants # territories.map(&:occupants).flatten
+    end
+
+    def compute_occupants
+      @occupants = territories.map(&:occupants).flatten
     end
 
     def compute_occupied
-      @occupied = occupants.flatten.map(&:location)
+      @occupied = compute_occupants.map(&:location)
     end
 
     def occupied?(xy)
       occupied.include?(xy)
     end
 
+    def occupant_at(xy)
+      occupants.detect { |o| o.location == xy }
+    end
+
     def detect_territory_at(xy)
       territories.detect { |t| t.occupants.map(&:location).include?(xy) }
     end
 
-    #def at(xy)	
-    #  c = color_at(xy)
-    #  Straightedge::Figures::Mark.new(*xy, color: c) # color_at(xy))
-    #end
-
-    def color_at(xy)
-      compute_occupied if occupied?(xy) && !detect_territory_at(xy)
-      occupied?(xy) ? detect_territory_at(xy).color : :none
+    def surrounding(xy)
+      @projections ||= {}
+      @projections[xy] ||= project(xy)
+      @projections[xy].map(&method(:occupant_at)).compact
     end
-
-    def compute_projected_targets(territory, n=territory.growth)
-      available_adjacent(territory).take(n)
-    end
-
-    def available_adjacent(territory)
-      @grid.clip territory.adjacent.reject(&method(:occupied?))
-    end
-
   end
 end
-
-#

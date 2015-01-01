@@ -1,30 +1,37 @@
 module Abstracta
   class Territory
-    include Straightedge
+    include Entity
     include Enumerable
-    extend Forwardable
+    extend  Forwardable
 
-    def_delegators :occupants, :[], :size, :each, :include?, :adjacent
-    def_delegator :developer, :step
+    def_delegators :occupants, :size, :each #, :include?, :adjacent, :center
+    def_delegators :to_a, :[], :first, :adjacent, :center
 
     alias :occupy? :include?
 
     attr_reader :dna
     attr_reader :occupants
     attr_reader :compass, :developer
-    attr_reader :age
     attr_reader :period, :limit
     attr_reader :color
+    attr_reader :world
 
-    def initialize(locations=[[0,0]],genome=Genome.default)
-      @compass   = Compass.default
+    def initialize(locations=[[0,0]], genome: Genome.default, 
+		                      color: Straightedge::Colors.pick,
+				      world: nil)
+
+      @compass   = Straightedge::Toolkit::Compass.default
       @occupants = locations.map(&method(:occupant_at))
-      @age       = 0
-      @developer = TerritoryDeveloper.new(self)
-      @color     = Colors.pick #hex_value(Colors.pick)
-
+      @color     = color
+      @world     = world
+      #puts "=== new territory with color #{@color} and occupants: #{occupants}"
       parse_dna(genome)
     end
+
+    def to_a; @occupants.map(&:location) end
+    #def adjacent; map(&:adjacent) end
+    #def center;   map(&:center)   end
+    #def each_occupant; @occupants.each(&method(:yield)) end
 
     def parse_dna(genome)
       @dna       = genome.tap do |my|
@@ -33,10 +40,6 @@ module Abstracta
         @limit     = my.growth.limit
         @max_age   = my.age_bound
       end
-    end
-
-    def age! 
-      @age = @age + 1 
     end
 
     def projected_size
@@ -48,7 +51,7 @@ module Abstracta
     end
 
     def occupant_at(point)
-      Abstracta.new_occupant([point.x, point.y])
+      Abstracta.new_occupant([point.x, point.y], territory: self, world: world)
     end
 
     def occupy!(target)
@@ -61,6 +64,4 @@ module Abstracta
       end
     end
   end
-
-  config.territory_class = Territory
 end
