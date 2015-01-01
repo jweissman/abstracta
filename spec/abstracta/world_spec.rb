@@ -4,11 +4,11 @@ require 'abstracta'
 include Abstracta
 
 describe World do
-  let(:w)   { 20 }
-  let(:h)   { 20 }
+  let(:w)   { 50 }
+  let(:h)   { 50 }
   let(:geometry) { [w,h] }
 
-  subject { World.new(geometry, territory_count: 1) }
+  subject { World.new(dimensions: geometry, territory_count: 1) }
 
   let!(:territory) { subject.territories.first }
 
@@ -21,16 +21,19 @@ describe World do
     expect(territory.size).to eql(1)
   end
 
-  it 'should indicate what spaces is available' do
+  it 'should indicate what spaces are available' do
     expect(subject.occupied.size).to eql(1)
   end
 
+
+
   context "territory creation" do
     context "with a given density" do
-      let(:density) { 0.3 }
+      let(:density) { 0.00125 }
       let(:projected_count) { (w * h * density).to_i }
-      subject { World.new(geometry, density: density) }
-      let!(:actual_territory_count) { subject.territories.count }
+
+      subject { World.new(dimensions: geometry, density: density) }
+      let(:actual_territory_count) { subject.territories.count }
 
       it "should have territories" do
 	expect(subject.territories).not_to be_empty
@@ -47,8 +50,8 @@ describe World do
     end
 
     context "with a specified count" do
-      N = 5
-      subject { World.new(geometry, territory_count: N) }
+      N = 15
+      subject { World.new(dimensions: geometry, territory_count: N) }
       it "should have #{N} territories" do
 	expect(subject.territories.count).to eql(N)
 	expect(territory).to be_a(Territory)
@@ -68,7 +71,7 @@ describe World do
         n.times { subject.step }
       end
 
-      it 'should not have grown outside the territorial boundary' do
+      it 'should not have grown outside the global boundary' do
         within_bounds = subject.occupied.all? { |p| subject.include?(p) }
         expect(within_bounds).to be(true)
       end

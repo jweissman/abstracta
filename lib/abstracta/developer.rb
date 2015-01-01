@@ -16,75 +16,85 @@ module Abstracta
     end
 
     def step_children
-      #puts "#{self.class}#step_children(begin)"
-      collection.map do |child|
-	#puts "#{self.class}#step_children -- child: #{child}"
-	child.step # (parent: entity) #(*args)
-      end #(&:step)
-      #puts "#{self.class}#step_children(end)"
+      collection.compact.map { |child| child.step }
     end
 
     def step(*args)
-      #puts "#{self.class}#step(begin)"
       tick
-      #puts "#{self.class}#step -- step_children"
-      step_children #(*args)
+      step_children
       develop(*args)
-      #puts "#{self.class}#step(end)"
     end
 
     def develop(*args); end
 
     def self.for(entity)
-      #puts "--- dev for #{entity}"
       { 
 	World => WorldDeveloper, Territory => TerritoryDeveloper, Occupant => OccupantDeveloper 
       }[entity.class].new(entity)
     end
   end
 
+  # 
+  # really this becomes a lot simpler
+  # if we completely ignore territories
+  # i have been resisting this impulse
+  # but maybe it's right -- maybe territories *are* 
+  # a higher-order notion...
+  #
+  # in other words what if it's just about
+  # *colors* -- eventually *dna*
+  #
+
   class WorldDeveloper < Developer
-    def_delegators :world, :age, :size, :occupied?, :clip, :each, :surrounding,
-			   :cell_at, :compute_occupied, :occupant_at, :projected_growth
 
     def world; @entity end
     def collection; world.territories end
 
-    def develop(*ignored)
-      t0 = Time.now
-      puts "=== WorldDeveloper#develop !!!"
-      created = {}
-      puts "--- considering world of dimensions #{world.width} x #{world.height}"
-      
-      each do |xy|
-	s = surrounding(xy)
-	if !occupied?(xy)
-	  if s.count >= 1 && s.count <= 8 && rand < 0.3
-	    t = s.sample.territory
-	    created[t] ||= []
-	    if created[t].count < t.growth
-	      created[t] << xy
-	    end
-	  end
-	else
-	  lonely, overcrowded = 2, 7
-	  if s.count <= lonely || s.count >= overcrowded
-	    occupant_at(xy).die! 
-	  end
+    def foretell_cell_fate(dead: dead, surrounding: surrounding, replication: 0.2, genesis: 0.01)
+      s = surrounding
+      return :born  if dead && ((s >= 2 && rand < replication) || (s >= 1 && rand < genesis))
+      return :dying if !dead && s <= 1 || s >= 8
+      :unchanged
+    end
+
+    def predict_at(xy, w0) #, w1)
+      currently_dead        = !w0.occupied?(xy)
+      projected_xy          = Straightedge::Compass.default.project(xy)
+
+      surrounding_occupied  = projected_xy.select { |l| w0.occupied?(l) }
+      surrounding_count     = surrounding_occupied.size
+
+      foretell_cell_fate dead: currently_dead, surrounding: surrounding_count
+    end
+
+    def project_colors
+      projected_world        = world.clone
+      all_adj = world.territories.map(&:adjacent).flatten(1).uniq
+      all_adj.each do |xy| 
+	case predict_at(xy, world) #, projected_world) 
+	when :born  then 
+	  projected_world.paint(xy) #, world.colors_around(xy).mean)
+	when :dying then projected_world.clear(xy)
 	end
       end
+      projected_world.colors
+    end
 
-      created.each { |t, locations| locations.each { |o| t.occupy!(o) } }
-      compute_occupied
+    def develop(*ignored)
+      t0 = Time.now
+      sz = world.size
 
-      world.status = "growing (step processed in #{Time.now-t0})"
+      new_colors = project_colors
+
+      @entity = World.new(dimensions: world.dimensions, 
+			  colors: new_colors)
+
+      world.status = "grew by #{world.size-sz}; step processed in #{Time.now-t0}"
+      puts world.status
     end
   end
 
   class TerritoryDeveloper < Developer
-    #def_delegators :territory, :age, :size, :period, :limit, :each, # :first,
-    #  :occupy!, :adjacent, :growth, :cull!
-
     def territory; @entity end
     def collection; territory.occupants end
   end

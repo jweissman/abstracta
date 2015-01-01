@@ -3,85 +3,132 @@ module Abstracta
     include Entity
     extend Forwardable
 
-    def_delegator :occupants, :size
+    def_delegator :current_developer, :projected_world
+    def_delegator :occupied, :size
 
-    attr_accessor :scale, :territories, :status
+    attr_accessor :status
+    attr_reader :colors
 
-    def initialize(dimensions=Abstracta.config.geometry, opts={})
+    def initialize(dimensions: Abstracta.config.geometry,
+		   scale:      Abstracta.config.scale,
+		   density:    Abstracta.config.density,
+		   territory_count:      nil,
+		   territories: nil,
+		   colors: colors,
+		   status:     "Initializing, please wait")
       @dimensions      = dimensions
-      #puts "--- creating world with dimensions #{@dimensions}"
-      @density         = opts.delete(:density)         { Abstracta.config.density }
-      @territory_count = opts.delete(:territory_count) { width * height * @density }
-      @scale           = opts.delete(:scale)           { Abstracta.config.scale }
-      @status = "Initializing"
+
+      @scale           = scale 
+      @status          = status
+      if colors
+	puts "--- using provided colors" 
+      end
+
+      @colors = colors || begin
+        n = territory_count || width * height * density
+        puts "--- creating #{n} territories"
+        territories ||= create_territories(n)
+
+        paint_territories(territories)
+      end
+
       super(dimensions, scale: @scale)
-       
-      create_territories(@territory_count)
-      #puts "--- created #{@territories.size} territories"
     end
 
     def projected_growth
-      @territories.sum(&:growth) # { |t| t.projected_growth
+      territories.sum(&:growth)
     end
 
     def create_territories(n)
-      @territories = []
-      sample(n).each do |seed|
-	@territories << territory_at([seed])
+      ts = []
+      seeds = sample(n)
+      seeds.each do |seed|
+	print '.'
+	starting_cells = [seed] # + project(seed).sample(1)
+	ts << territory_at(starting_cells)
+      end
+      ts
+    end
+
+    def paint_territories(ts)
+      cs = {}
+      ts.each do |territory|
+	territory.occupants.map(&:location).each do |xy|
+	  cs[xy] = territory.color
+	end
+      end
+      cs
+    end
+
+    def clear(xy=nil)
+      if xy == nil
+	@colors = {}
+      else
+	@colors.delete(xy) #[xy] = nil
+      end
+    end
+
+    def pick_color
+      @unpicked_colors ||= Straightedge::Colors.all
+      @unpicked_colors.shift
+    end
+
+    def paint(xy, color: pick_color) # Straightedge::Colors.pick)
+      @colors ||= {}
+      #puts "--- painting #{xy} '#{color}'"
+      @colors[xy] = color
+    end
+
+    def territories
+      @colors.values.uniq.map do |color|
+	xys = @colors.select do |xy, clr| #invert[color]
+	  clr == color
+	end.keys
+
+	territory_at(xys, color: color)
       end
     end
 
     def visible?(xy)
-      occupied.include?(xy) 
+      occupied?(xy) #.include?(xy) 
     end
 
     def color_at(xy)
-      occupied?(xy) ? detect_territory_at(xy).color : :none
+      @colors[xy]
     end
 
     def each_cell
-      each do |xy| 
-	cell = cell_at xy
-	yield cell if cell && visible?(xy)
+      super do |xy|
+	yield xy if visible?(xy)
       end
     end
 
-    def territory_at(xys)
-      Abstracta.new_territory(xys)
+    #def each_cell
+    #  each do |xy| 
+    #    cell = cell_at xy
+    #    yield cell if cell && occupied?(xy) # && color_at(xy)
+    #  end
+    #end
+
+    #def colors_around(xy)
+    #  project(xy).map { |_xy| color_at(_xy) }.compact
+    #end
+
+    def territory_at(xys, color: pick_color) #Straightedge::Colors.pick)
+      Abstracta.new_territory(xys, color: color)
     end
 
     def occupied
-      @occupied ||= compute_occupied
-    end
-
-    def occupants
-      @occupants ||= compute_occupants # territories.map(&:occupants).flatten
-    end
-
-    def compute_occupants
-      @occupants = territories.map(&:occupants).flatten
-    end
-
-    def compute_occupied
-      @occupied = compute_occupants.map(&:location)
+      @colors ||= {}
+      @colors.keys
     end
 
     def occupied?(xy)
       occupied.include?(xy)
     end
 
-    def occupant_at(xy)
-      occupants.detect { |o| o.location == xy }
-    end
-
-    def detect_territory_at(xy)
-      territories.detect { |t| t.occupants.map(&:location).include?(xy) }
-    end
-
     def surrounding(xy)
-      @projections ||= {}
-      @projections[xy] ||= project(xy)
-      @projections[xy].map(&method(:occupant_at)).compact
+      project(xy).map(&method(:detect_occupant_at)).compact
     end
   end
 end

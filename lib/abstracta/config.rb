@@ -1,9 +1,9 @@
 module Abstracta
   include Mini::Config
   configure do |abstracta|
-    abstracta.scale = 10
+    abstracta.scale = 50
     abstracta.density = 0.125
-    abstracta.geometry = [10,10]
+    abstracta.geometry = [20,20]
   end
 
   class << self

@@ -18,11 +18,11 @@ module Abstracta
     end
 
     def logical_geometry
-      @logical_geometry ||= [@physical_dimensions.x / scale, @physical_dimensions.y / scale] #Straightedge::Figures::Grid.reify_geometry(@physical_dimensions, scale)
+      @logical_geometry ||= [@physical_dimensions.x / scale, @physical_dimensions.y / scale]
     end
 
     def world
-      @world ||= Abstracta::World.new(logical_geometry, scale: scale)
+      @world ||= Abstracta::World.new(dimensions: logical_geometry, scale: scale)
     end
 
     def orchestrate

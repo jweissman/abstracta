@@ -1,5 +1,6 @@
 module Abstracta
   class Occupant
+    include Straightedge::Aspects::Colorable
     include Entity
     extend Forwardable
 

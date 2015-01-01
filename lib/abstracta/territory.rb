@@ -5,7 +5,7 @@ module Abstracta
     extend  Forwardable
 
     def_delegators :occupants, :size, :each #, :include?, :adjacent, :center
-    def_delegators :to_a, :[], :first, :adjacent, :center
+    def_delegators :to_a, :[], :first, :center
 
     alias :occupy? :include?
 
@@ -32,6 +32,7 @@ module Abstracta
     #def adjacent; map(&:adjacent) end
     #def center;   map(&:center)   end
     #def each_occupant; @occupants.each(&method(:yield)) end
+    def adjacent; (to_a.adjacent) end
 
     def parse_dna(genome)
       @dna       = genome.tap do |my|

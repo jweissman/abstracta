@@ -1,6 +1,7 @@
 module Abstracta
   # this is kind of a weird mixin
   # trying to reduce duplication across world/territory/occupant
+  # the cost may be too great :/
   module Entity 
     def self.included(base)
       base.send(:include, InstanceMethods)
@@ -18,8 +19,12 @@ module Abstracta
 	@age = age + 1
       end
 
+      def current_developer
+	@developer ||= Developer.for(self)
+      end
+
       def step(*args)
-	(@dev ||= Developer.for(self)).step(*args)
+	current_developer.step(*args)
       end
     end
   end
