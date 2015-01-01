@@ -14,5 +14,5 @@ development_dependencies:
   rake: ~> 10.4.2
   rspec-core: ~> 3.1.7
   rspec-expectations: ~> 3.1.2
-  bundler: ~> 1.7.10
+  bundler: ~> 1.7
   yard: ~> 0.8.7
