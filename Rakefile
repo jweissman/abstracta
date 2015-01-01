@@ -19,9 +19,7 @@ rescue Bundler::BundlerError => e
 end
 
 require 'rake'
-
-require 'rubygems/tasks'
-Gem::Tasks.new
+Bundler::GemHelper.install_tasks
 
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new
@@ -29,7 +27,7 @@ RSpec::Core::RakeTask.new
 task :test    => :spec
 task :default => :spec
 
-require 'yard'
-YARD::Rake::YardocTask.new  
-task :doc => :yard
-
+#require 'yard'
+#YARD::Rake::YardocTask.new  
+#task :doc => :yard
+#

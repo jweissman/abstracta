@@ -11,8 +11,8 @@ dependencies:
   straightedge: ~> 0.1.1
 
 development_dependencies:
-  bundler: ~> 1.0
-  rake: ~> 0.8
-  rspec: ~> 2.4
-  rubygems-tasks: ~> 0.2
-  yard: ~> 0.8
+  rake: ~> 10.4.2
+  rspec-core: ~> 3.1.7
+  rspec-expectations: ~> 3.1.2
+  bundler: ~> 1.7.10
+  yard: ~> 0.8.7
