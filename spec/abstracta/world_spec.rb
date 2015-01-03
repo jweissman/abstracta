@@ -18,14 +18,12 @@ describe World do
 
   it 'should generate a territory' do
     expect(territory).to be_a(Territory)
-    expect(territory.size).to eql(1)
+    expect(territory.size).to be > 1
   end
 
   it 'should indicate what spaces are available' do
-    expect(subject.occupied.size).to eql(1)
+    expect(subject.occupied.size).to be > 1
   end
-
-
 
   context "territory creation" do
     context "with a given density" do
@@ -47,6 +45,11 @@ describe World do
 	expect(territory).to be_a(Territory)
 	expect(territory.size).to be > 0
       end
+
+      it "should generate territories with Integer-valued positions" do
+	expect(territory.first.x).to be_an(Integer)
+	expect(territory.first.y).to be_an(Integer)
+      end
     end
 
     context "with a specified count" do
@@ -56,19 +59,29 @@ describe World do
 	expect(subject.territories.count).to eql(N)
 	expect(territory).to be_a(Territory)
       end
+
     end
   end
 
   context "#step" do
     it 'should age the world' do
-      expect { subject.step }.to change { subject.age }.by(1)
+      expect { subject.step }.to change { subject.age }.by 1
     end
 
-    context "growth" do
+    it 'should grow the world' do
+      expect { subject.step }.to change { subject.size }.by(a_value > 0)
+      #expect { subject.step }.to change { subject.size }.by(a_value <= (subject.projected_growth.to_i))
+    end
+
+    context "growth behaviors" do
       let(:n) { 10 }
 
       before do
         n.times { subject.step }
+      end
+
+      it 'should grow a bit' do
+	expect(subject.size).to be > 3
       end
 
       it 'should not have grown outside the global boundary' do

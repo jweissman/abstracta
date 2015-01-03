@@ -1,87 +1,112 @@
 module Abstracta
   class World < Straightedge::Figures::Grid
-    include Entity
     extend Forwardable
 
     def_delegator :current_developer, :projected_world
     def_delegator :occupied, :size
+    def_delegator :compass, :orbit
 
     attr_accessor :status
-    attr_reader :colors
+    attr_reader :colors, :age
 
     def initialize(dimensions: Abstracta.config.geometry,
 		   scale:      Abstracta.config.scale,
 		   density:    Abstracta.config.density,
-		   territory_count:      nil,
-		   territories: nil,
-		   colors: colors,
+		   territory_count: territory_count,
+		   territories:     territories,
+		   colors:          colors,
 		   status:     "Initializing, please wait")
-      @dimensions      = dimensions
 
+      @age             = 0
+
+      @dimensions      = dimensions
       @scale           = scale 
       @status          = status
-      if colors
-	puts "--- using provided colors" 
-      end
+      @compass         = compass
 
-      @colors = colors || begin
-        n = territory_count || width * height * density
-        puts "--- creating #{n} territories"
-        territories ||= create_territories(n)
-
-        paint_territories(territories)
+      ts = nil
+      if colors.nil?
+	n = territory_count || width * height * density
+	ts ||= create_territories(n)
+	@colors = paint_territories(ts)
+      else
+	@colors = colors
       end
 
       super(dimensions, scale: @scale)
     end
 
+    def colors
+      @colors ||= {}
+    end
+
+    def oracle
+      @oracle ||= Oracle.new(dimensions: @dimensions)
+    end
+
+    def step
+      @t0 ||= Time.now
+      @age = @age + 1
+      @status, @colors = oracle.predict(colors)
+      @status = @status + " -- step #@age in #{Time.now-@t0}"
+      @t0 = Time.now
+    end
+    
+    ###
+
     def projected_growth
       territories.sum(&:growth)
     end
 
-    def create_territories(n)
-      ts = []
-      seeds = sample(n)
-      seeds.each do |seed|
-	print '.'
-	starting_cells = [seed] # + project(seed).sample(1)
-	ts << territory_at(starting_cells)
-      end
-      ts
+    def create_territories(n=1, m=(Abstracta.config.starting_cell_range).to_a.sample)
+      puts "--- creating #{n} territories"
+      seeds = sample(n).map { |seed| [seed] + orbit(seed) }
+      seeds.map { |xys| territory_at(xys.sample(m)) }
     end
 
-    def paint_territories(ts)
+    def territory_at(xys, color: pick_color)
+      Abstracta.new_territory(xys, color: color)
+    end
+
+    def pick_color
+      # what is all this wibble (we're apparently trying to favor the palette, at least until it runs out...)
+       exhausted = 10
+       @picked_colors ||= []
+       c = Straightedge::Colors.pick until @picked_colors.include?(c) || (exhausted=exhausted-1).zero?
+       c = Straightedge::Colors.random if exhausted.zero?
+       @picked_colors << c
+       c
+    end
+
+    def paint_territories(ts=create_territories)
       cs = {}
       ts.each do |territory|
-	territory.occupants.map(&:location).each do |xy|
-	  cs[xy] = territory.color
+	puts "--- Painting territory of size #{territory.size}"
+	territory.each do |c|
+	  cs[[c.x, c.y]] = territory.color
 	end
       end
       cs
     end
 
-    def clear(xy=nil)
-      if xy == nil
-	@colors = {}
-      else
-	@colors.delete(xy) #[xy] = nil
-      end
-    end
+    #def clear(xy=nil)
+    #  if xy == nil
+    #    @colors = {}
+    #  else
+    #    @colors.delete(xy) #[xy] = nil
+    #  end
+    #end
 
-    def pick_color
-      @unpicked_colors ||= Straightedge::Colors.all
-      @unpicked_colors.shift
-    end
-
-    def paint(xy, color: pick_color) # Straightedge::Colors.pick)
-      @colors ||= {}
-      #puts "--- painting #{xy} '#{color}'"
-      @colors[xy] = color
-    end
+    #def paint(xy, color: pick_color) # Straightedge::Colors.pick)
+    #  raise 'that is not a good color' if color.nil?
+    #  @colors ||= {}
+    #  #puts "--- painting #{xy} '#{color}'"
+    #  @colors[xy] = color
+    #end
 
     def territories
-      @colors.values.uniq.map do |color|
-	xys = @colors.select do |xy, clr| #invert[color]
+      colors.values.uniq.map do |color|
+	xys = colors.select do |xy, clr| #invert[color]
 	  clr == color
 	end.keys
 
@@ -89,46 +114,27 @@ module Abstracta
       end
     end
 
-    def visible?(xy)
-      occupied?(xy) #.include?(xy) 
+    def color_at(xy)
+      colors[xy]
     end
 
-    def color_at(xy)
-      @colors[xy]
+    def visible?(xy)
+      colors.has_key?(xy)
     end
 
     def each_cell
-      super do |xy|
-	yield xy if visible?(xy)
+      each do |xy| 
+        yield cell_at(xy) if visible?(xy)  #occupied?(xy)
       end
     end
 
-    #def each_cell
-    #  each do |xy| 
-    #    cell = cell_at xy
-    #    yield cell if cell && occupied?(xy) # && color_at(xy)
-    #  end
-    #end
-
-    #def colors_around(xy)
-    #  project(xy).map { |_xy| color_at(_xy) }.compact
-    #end
-
-    def territory_at(xys, color: pick_color) #Straightedge::Colors.pick)
-      Abstracta.new_territory(xys, color: color)
+    def cell_at(xy)
+      Straightedge::Figures::Quadrilateral.new(color: color_at(xy), dimensions: [@scale, @scale], location: to_pixels(xy))
     end
+
 
     def occupied
-      @colors ||= {}
-      @colors.keys
-    end
-
-    def occupied?(xy)
-      occupied.include?(xy)
-    end
-
-    def surrounding(xy)
-      project(xy).map(&method(:detect_occupant_at)).compact
+      colors.keys
     end
   end
 end

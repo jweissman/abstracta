@@ -1,6 +1,5 @@
 module Abstracta
   class Territory
-    include Entity
     include Enumerable
     extend  Forwardable
 

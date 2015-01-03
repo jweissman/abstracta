@@ -4,8 +4,7 @@ module Abstracta
       {
 	[0, 0]  => world,
 	[10,10] => "abstracta v#{Abstracta::VERSION}",
-	[10,30] => world.age.to_s,
-	[10,50] => world.status
+	[10,100] => world.status
       }
     end
 
@@ -26,7 +25,11 @@ module Abstracta
     end
 
     def orchestrate
+      @t0 ||= Time.now
+      sz = world.size
       world.step
+      puts "--- grew by #{world.size-sz}, step in #{Time.now-@t0}"
+      @t0 = Time.now
     end
 
     def click(x,y)

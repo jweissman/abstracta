@@ -1,14 +1,13 @@
 module Abstracta
   class Occupant
     include Straightedge::Aspects::Colorable
-    include Entity
     extend Forwardable
 
     attr_reader :location
-    def_delegators :location, :x, :y
-
+    attr_reader :age
     attr_reader :territory, :world
-    attr_reader :max_age
+
+    def_delegators :location, :x, :y
 
     def initialize(location=[0,0], color: :white, 
 		                   territory: nil, 
@@ -17,15 +16,9 @@ module Abstracta
       @location  = location
       @territory = territory
       @world     = world
+      @age       = 0
     end
 
-
-    def die!
-      @territory.occupants.delete_if { |o| o.location == @location }
-    end
-
-    #def step
-    #  @age = @age + 1
-    #end
+    def step; @age = @age + 1 end
   end
 end

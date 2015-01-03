@@ -9,7 +9,7 @@ module Abstracta
 	  limit:  100,
 	  rate: OpenStruct.new(
 	    additive: 2,
-	    multiplicative: 1.25
+	    multiplicative: 1.05
           )
         )
       )
