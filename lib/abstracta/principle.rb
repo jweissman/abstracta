@@ -49,12 +49,12 @@ module Abstracta
     end
 
     def self.starvation
-      @starving ||= death :starvation, range: Abstracta.config.starvation..10 
+      @starving ||= death :starvation, range: Abstracta.config.starvation..10, random: Abstracta.config.decay
      # ..(Abstracta.config.loneliness))
     end
 
     def self.loneliness
-      @lonely ||= death :loneliness, range: 0..Abstracta.config.loneliness
+      @lonely ||= death :loneliness, range: 0..Abstracta.config.loneliness, random: Abstracta.config.decay
     end
 
     def self.all

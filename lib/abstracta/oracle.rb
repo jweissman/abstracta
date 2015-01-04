@@ -2,28 +2,32 @@ module Abstracta
   class Oracle
     def initialize(dimensions: [10,10])
       @grid = Straightedge::Grid.new(dimensions)
-      @merge_strategy = :mean
+      @merge_strategy = :smooth
       @births, @deaths = 0, 0
     end
 
-    def predict(colors={}) #, depth: Abstracta.config.speed)
-      #return [nil, colors] if depth.zero?
-      return ['an empty field remains empty', {}] if colors.empty?
+    def predict(colors={}, depth: Abstracta.config.speed)
+      return [0,0,colors] if depth.zero? || colors.empty?
 
+      births, deaths = 0,0
       prediction = colors.clone
       @grid.each do |xy| 
 	f = fate(xy,colors)
 	next if f.unchanged?
 	if f.birth?
-	  @births = @births + 1
+	  births = births + 1
 	  prediction[xy] = merge(neighbors(xy, colors))
 	elsif f.death?
-	  @deaths = @deaths + 1 
+	  deaths = deaths + 1 
 	  prediction.delete(xy) 
 	end
       end
 
-      ["Population changed by #{@births-@deaths}", prediction]
+      b, d, prediction = predict(prediction, depth: depth-1)
+      births = births + b
+      deaths = deaths + d
+
+      [births, deaths, prediction]
     end
 
     def neighbors(xy, colors)
@@ -43,8 +47,10 @@ module Abstracta
 	colors.mean
       elsif @merge_strategy == :smooth
 	rgbs = colors.map(&method(:componentize_rgb))
-	reds, blues, greens = rgbs.map(&:first), rgbs.map(&:second), rbgs.map(&:third)
+	reds, blues, greens = rgbs.map(&:first), rgbs.map(&:second), rgbs.map(&:third)
 	rgb_from_components(reds.mean, blues.mean, greens.mean)
+      else 
+	raise "unknown merge strategy: #@merge_strategy"
       end
     end
 

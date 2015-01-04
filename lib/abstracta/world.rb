@@ -26,7 +26,7 @@ module Abstracta
 
       ts = nil
       if colors.nil?
-	n = territory_count || width * height * density
+	n = territory_count || [width * height * density, 1.0].max
 	ts ||= create_territories(n)
 	@colors = paint_territories(ts)
       else
@@ -47,8 +47,8 @@ module Abstracta
     def step
       @t0 ||= Time.now
       @age = @age + 1
-      @status, @colors = oracle.predict(colors)
-      @status = @status + " -- step #@age in #{Time.now-@t0}"
+      @births, @deaths, @colors = oracle.predict(colors)
+      @status = "#@age (#{Time.now-@t0}, #@births born/#@deaths died)"
       @t0 = Time.now
     end
     
@@ -67,10 +67,9 @@ module Abstracta
 
     def pick_color
       # what is all this wibble (we're apparently trying to favor the palette, at least until it runs out...)
-       exhausted = 10
+       @color_list ||= Straightedge::Colors.all
        @picked_colors ||= []
-       c = Straightedge::Colors.pick until @picked_colors.include?(c) || (exhausted=exhausted-1).zero?
-       c = Straightedge::Colors.random if exhausted.zero?
+       c = Straightedge::Colors.hex_value(@color_list.shift || Straightedge::Colors.random)
        @picked_colors << c
        c
     end
