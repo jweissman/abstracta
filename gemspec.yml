@@ -8,7 +8,7 @@ homepage: https://rubygems.org/gems/abstracta
 
 dependencies:
   activesupport: ~> 4.2.0
-  straightedge: ~> 0.1.1
+  straightedge: ~> 0.1.2
 
 development_dependencies:
   rake: ~> 10.4.2

@@ -4,13 +4,13 @@ gemspec
 
 gem "rake"
 
-gem "straightedge", path: "../straightedge"
+gem "straightedge"
 gem "activesupport"    
 
 group :development do
   gem "pry"
   gem "gosu"
-  gem "straightedge-gosu", path: "../straightedge-gosu"
+  gem "straightedge-gosu"
 end
 
 group :test do

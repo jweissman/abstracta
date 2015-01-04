@@ -1,21 +1,21 @@
 module Abstracta
   include Mini::Config
   configure do |abstracta|
-    abstracta.scale = 20
-    abstracta.density = 0.5
+    abstracta.scale = 30
+    abstracta.density = 0.00125
     abstracta.geometry = [100,100]
-    abstracta.speed = 20
+    abstracta.speed = 1
 
     # evolutionary probabilities (note these will mess tests up -- maybe a good candidate for over-riding in tests?)
     # 				 ensures determinacy i mean -- note we could get around this with... seeds... but not sure that's really better
     # 				 at least in this case
     # 				 
     abstracta.reproduction = 0.25 
-    abstracta.replication  = 0.125
+    abstracta.replication  = 0.025
 
     # loneliness/starvation limits
-    abstracta.decay = 0.25
-    abstracta.starvation = 7
+    abstracta.decay = 0.025
+    abstracta.starvation = 6
     abstracta.loneliness = 4
 
     abstracta.starting_cell_range = 3..7

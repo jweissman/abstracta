@@ -48,7 +48,7 @@ module Abstracta
       @t0 ||= Time.now
       @age = @age + 1
       @births, @deaths, @colors = oracle.predict(colors)
-      @status = "#@age (#{Time.now-@t0}, #@births born/#@deaths died)"
+      @status = "#@age (#{Time.now-@t0}ms, #@births born/#@deaths died)"
       @t0 = Time.now
     end
     
