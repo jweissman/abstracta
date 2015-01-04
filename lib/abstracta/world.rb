@@ -52,14 +52,11 @@ module Abstracta
       @t0 = Time.now
     end
     
-    ###
-
     def projected_growth
       territories.sum(&:growth)
     end
 
     def create_territories(n=1, m=(Abstracta.config.starting_cell_range).to_a.sample)
-      puts "--- creating #{n} territories"
       seeds = sample(n).map { |seed| [seed] + orbit(seed) }
       seeds.map { |xys| territory_at(xys.sample(m)) }
     end
@@ -81,7 +78,6 @@ module Abstracta
     def paint_territories(ts=create_territories)
       cs = {}
       ts.each do |territory|
-	puts "--- Painting territory of size #{territory.size}"
 	territory.each do |c|
 	  cs[[c.x, c.y]] = territory.color
 	end
@@ -89,24 +85,9 @@ module Abstracta
       cs
     end
 
-    #def clear(xy=nil)
-    #  if xy == nil
-    #    @colors = {}
-    #  else
-    #    @colors.delete(xy) #[xy] = nil
-    #  end
-    #end
-
-    #def paint(xy, color: pick_color) # Straightedge::Colors.pick)
-    #  raise 'that is not a good color' if color.nil?
-    #  @colors ||= {}
-    #  #puts "--- painting #{xy} '#{color}'"
-    #  @colors[xy] = color
-    #end
-
     def territories
       colors.values.uniq.map do |color|
-	xys = colors.select do |xy, clr| #invert[color]
+	xys = colors.select do |xy, clr|
 	  clr == color
 	end.keys
 

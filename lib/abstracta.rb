@@ -13,6 +13,7 @@ require 'abstracta/genome'
 require 'abstracta/world'
 
 require 'abstracta/fate'
+require 'abstracta/principle'
 require 'abstracta/oracle'
 
 require 'abstracta/game_master'
