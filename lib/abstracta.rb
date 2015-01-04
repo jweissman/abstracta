@@ -1,11 +1,8 @@
 require 'ostruct'
 require 'straightedge'
-require 'pry'
 
 require 'abstracta/version'
 require 'abstracta/config'
-#require 'abstracta/developer'
-#require 'abstracta/entity'
 
 require 'abstracta/occupant'
 require 'abstracta/territory'
